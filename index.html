@@ -265,6 +265,67 @@
         margin: 20px 0;
       }
 
+      /* 示意圖樣式 */
+      .instruction-example {
+        margin: 20px auto;
+        width: 100%;
+        max-width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .example-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      
+      .example-puzzle {
+        width: 45%;
+        aspect-ratio: 1/1;
+        border: 2px solid #2c3e50;
+        border-radius: 5px;
+        position: relative;
+        background-color: #f0f0f0;
+        overflow: hidden;
+      }
+      
+      .example-arrow {
+        width: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        color: #2c3e50;
+      }
+      
+      .example-piece {
+        position: absolute;
+        width: 31%;
+        height: 31%;
+        border: 1px solid #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #3498db;
+        color: white;
+        font-weight: bold;
+      }
+      
+      .example-empty {
+        background-color: transparent;
+        border: none;
+      }
+      
+      .example-caption {
+        font-size: 0.9rem;
+        color: #333;
+        text-align: center;
+        margin-top: 5px;
+      }
+
       .game-board {
         text-align: center;
         position: relative;
@@ -397,10 +458,42 @@
             <br>
             <p>請點選空格位置周圍的拼圖</p>
             <strong><p class="under-line">將該拼圖移動到空格位置！</p></strong>
+            <p>將拼圖依右下方示意圖數字順序排列</p>
             <p>目標是要將拼圖組成完整的圖片！</p>
-            <p>並依照圖片中的數字前往市場中的攤位</p>
-            <p>輸入攤位的名字，尋找小男孩！</p>
-            <br>
+            
+            <!-- 示意圖 -->
+            <div class="instruction-example">
+              <div class="example-container">
+                <div class="example-puzzle">
+                  <!-- 移動後的狀態 -->
+                  <div class="example-piece" style="top: 0; left: 0;">1</div>
+                  <div class="example-piece" style="top: 0; left: 33%;">2</div>
+                  <div class="example-piece" style="top: 0; left: 66%;">3</div>
+                  <div class="example-piece" style="top: 33%; left: 0;">4</div>
+                  <div class="example-piece" style="top: 33%; left: 33%;">5</div>
+                  <div class="example-piece" style="top: 33%; left: 66%;">6</div>
+                  <div class="example-piece" style="top: 66%; left: 0;">7</div>
+                  <!-- 8移動了 -->
+                  <div class="example-piece" style="top: 66%; left: 66%;">8</div>
+                  <!-- 空格移動到左下角 -->
+                </div>
+                <div class="example-arrow">→</div>
+                <div class="example-puzzle">
+                  <!-- 原始狀態 -->
+                  <div class="example-piece" style="top: 0; left: 0;">1</div>
+                  <div class="example-piece" style="top: 0; left: 33%;">2</div>
+                  <div class="example-piece" style="top: 0; left: 66%;">3</div>
+                  <div class="example-piece" style="top: 33%; left: 0;">4</div>
+                  <div class="example-piece" style="top: 33%; left: 33%;">5</div>
+                  <div class="example-piece" style="top: 33%; left: 66%;">6</div>
+                  <div class="example-piece" style="top: 66%; left: 0;">7</div>
+                  <div class="example-piece" style="top: 66%; left: 33%;">8</div>
+                  <!-- 空格在右下角 -->
+                </div>
+              </div>
+              <p class="example-caption">點擊數字8，將它移動到空格位置</p>
+            </div>
+            
             <button id="start-game" class="start-button">開始遊戲</button>
           </div>
 
