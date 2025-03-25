@@ -2,7 +2,8 @@
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>滑動拼圖遊戲</title>
     <style>
       * {
@@ -17,6 +18,8 @@
         line-height: 1.6;
         color: #333;
         background-color: #f5f5f5;
+        overscroll-behavior: none;
+        touch-action: none;
       }
       
       body {
@@ -796,14 +799,44 @@
         });
 
         // 監聽視窗大小變化
+        // 處理螢幕旋轉和視窗大小變化
+        let resizeTimeout;
         window.addEventListener("resize", function() {
-          if (gameBoard.style.display !== "none") {
-            updatePuzzleSize();
-            if (isGameStarted) {
-              shufflePuzzle();
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(function() {
+            if (gameBoard.style.display !== "none") {
+              updatePuzzleSize();
+              // 保持當前拼圖狀態，不重新打亂
+              if (!isGameStarted) {
+                initPuzzle();
+              } else {
+                // 重新計算並更新每個拼圖塊的位置
+                const pieceSize = Math.floor((puzzleSize - 6) / size);
+                const marginOffset = (puzzleSize - (pieceSize * size + 6)) / 2;
+                pieces.forEach(piece => {
+                  piece.element.style.width = `${pieceSize}px`;
+                  piece.element.style.height = `${pieceSize}px`;
+                  piece.element.style.left = `${piece.x * (pieceSize + 2) + marginOffset}px`;
+                  piece.element.style.top = `${piece.y * (pieceSize + 2) + marginOffset}px`;
+                });
+              }
             }
-          }
+          }, 250); // 添加延遲以避免頻繁更新
         });
+
+        // 防止下拉刷新
+        document.addEventListener('touchmove', function(e) {
+          if (gameBoard.style.display !== "none") {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        // 優化觸控事件
+        document.addEventListener('touchstart', function(e) {
+          if (gameBoard.style.display !== "none") {
+            e.preventDefault();
+          }
+        }, { passive: false });
 
         // 初始化
         updatePuzzleSize();
