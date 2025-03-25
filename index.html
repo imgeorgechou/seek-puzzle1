@@ -815,21 +815,48 @@
           clearTimeout(resizeTimeout);
           resizeTimeout = setTimeout(function() {
             if (gameBoard.style.display !== "none") {
-              updatePuzzleSize();
-              // 保持當前拼圖狀態，不重新打亂
-              if (!isGameStarted) {
-                initPuzzle();
-              } else {
-                // 重新計算並更新每個拼圖塊的位置
-                const pieceSize = Math.floor((puzzleSize - 6) / size);
-                const marginOffset = (puzzleSize - (pieceSize * size + 6)) / 2;
-                pieces.forEach(piece => {
+              // 保存當前拼圖狀態
+              const currentState = pieces.map(piece => ({
+                value: piece.value,
+                x: piece.x,
+                y: piece.y
+              }));
+              const currentEmptyPos = {...emptyPos};
+              
+              // 更新拼圖大小
+              puzzleSize = puzzleContainer.clientWidth;
+              
+              // 重新計算並更新每個拼圖塊的位置
+              const pieceSize = Math.floor((puzzleSize - 6) / size);
+              const marginOffset = (puzzleSize - (pieceSize * size + 6)) / 2;
+              
+              // 根據保存的狀態更新拼圖位置
+              pieces.forEach((piece, index) => {
                   piece.element.style.width = `${pieceSize}px`;
-                  piece.element.style.height = `${pieceSize}px`;
-                  piece.element.style.left = `${piece.x * (pieceSize + 2) + marginOffset}px`;
-                  piece.element.style.top = `${piece.y * (pieceSize + 2) + marginOffset}px`;
+                piece.element.style.height = `${pieceSize}px`;
+                
+                // 根據保存的狀態設置拼圖位置
+                const savedPiece = currentState[index];
+                if (savedPiece) {
+                  piece.x = savedPiece.x;
+                  piece.y = savedPiece.y;
+                  piece.value = savedPiece.value;
+                  
+                  // 更新拼圖塊的位置
+                  const left = piece.x * pieceSize + marginOffset;
+                  const top = piece.y * pieceSize + marginOffset;
+                  piece.element.style.left = `${left}px`;
+                  piece.element.style.top = `${top}px`;
+                  
+                  // 更新拼圖塊的顯示內容
+                  if (showNumbersCheckbox.checked) {
+                    piece.element.textContent = piece.value;
+                  }
+                }
                 });
-              }
+                
+                // 恢復空格位置
+              emptyPos = currentEmptyPos;
             }
           }, 250); // 添加延遲以避免頻繁更新
         });
